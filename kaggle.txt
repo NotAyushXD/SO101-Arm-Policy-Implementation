@@ -1,0 +1,14 @@
+# Kaggle-specific dependencies. Kaggle's base image already has torch,
+# torchvision, numpy, pandas, datasets, huggingface_hub, tqdm, requests.
+#
+# IMPORTANT: Verify Kaggle's torch version matches local before training.
+# As of 2026-04, Kaggle ships torch 2.4.x which is fine.
+
+lerobot==0.5.2
+wandb>=0.17
+PyYAML>=6.0
+
+# Server-side only (if you also use this image for hosting inference):
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pyngrok>=7.1

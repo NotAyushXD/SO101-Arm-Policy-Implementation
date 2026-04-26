@@ -1,0 +1,27 @@
+# Shared defaults inherited by all architecture configs.
+# Architecture-specific configs (act.yaml, pi0.yaml, etc.) override these.
+
+# --- Dataset ---
+# Override per-experiment in the architecture config or via --override.
+dataset:
+  repo_id: NotAyushXD/so101-arm-pickupbowl-50episodes
+
+# --- Policy output ---
+policy:
+  push_to_hub: true
+  # repo_id is set per-architecture (act.yaml has its own, pi0.yaml has its own)
+
+# --- Training schedule ---
+training:
+  steps: 80000
+  batch_size: 8
+  save_freq: 5000
+  seed: 42
+  # Optimizer LR is set per-architecture because it differs significantly
+  # between IL methods (ACT: 1e-5) and VLAs (pi0: 5e-5).
+
+# --- Logging ---
+wandb:
+  enable: true
+  project: so101
+  # entity: optional; set in your local .env or override at runtime

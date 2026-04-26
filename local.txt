@@ -1,0 +1,30 @@
+# Mac M2 / Apple Silicon dependencies. Pinned to LeRobot 0.5.2 to match Kaggle.
+
+# Core ML stack — torch needs to support MPS, so 2.4+ is fine.
+# Don't downgrade to <2.4 unless you're forced to; MPS support gets worse.
+torch>=2.4,<2.6
+torchvision>=0.19,<0.21
+numpy>=1.26,<2.0     # LeRobot is still numpy<2 in many places
+pillow>=10.0
+
+# LeRobot — pin to 0.5.2 so import paths and CLI flags match what we wrote against.
+# If you want to bump this, expect to update training/train.py CLI flags
+# and inference/policies/*_adapter.py import paths.
+lerobot[feetech]==0.5.2
+
+# HF Hub + datasets
+huggingface_hub>=0.24
+datasets>=2.20
+
+# For client/run_remote.py
+requests>=2.31
+opencv-python>=4.9   # used by data/record_demos.py for camera preflight
+
+# Config / env loading
+python-dotenv>=1.0
+PyYAML>=6.0          # for training/train.py config loading
+
+# Misc
+tqdm>=4.66
+rich>=13.7
+pandas>=2.2          # for eval CSV processing

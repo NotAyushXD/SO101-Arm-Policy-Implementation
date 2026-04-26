@@ -1,0 +1,42 @@
+# ACT (Action Chunking with Transformers) — week 1 target.
+#
+# Hyperparameters chosen to match LeRobot's ACT defaults, which match the
+# published ACT paper. Don't deviate without a reason — these have been
+# extensively validated.
+
+inherits: _base.yaml
+
+# What to call this experiment. Used for W&B run names and HF Hub repo.
+name: act
+
+policy:
+  type: act
+  repo_id: NotAyushXD/so101-act-pick-bowl-v0
+  # ACT-specific. These match the LeRobot defaults; included here for
+  # transparency and ablation. Don't change without reason.
+  chunk_size: 50
+  n_action_steps: 50         # match chunk_size; LeRobot computes loss over the full chunk
+  use_vae: true
+  kl_weight: 10.0
+  dim_model: 512
+  n_heads: 8
+  dim_feedforward: 3200
+  n_encoder_layers: 4
+  n_decoder_layers: 1        # ACT paper notes 1 decoder layer is sufficient
+
+training:
+  steps: 80000
+  batch_size: 8
+  save_freq: 5000
+
+optimizer:
+  lr: 1.0e-5
+  lr_backbone: 1.0e-5        # ACT paper uses same LR for backbone
+
+# --- Architecture-specific notes ---
+# - ACT does not use language. The `task` field in the dataset is recorded
+#   but ignored by the policy. Don't waste effort tuning task strings for ACT.
+# - With 50 demos × ~600 frames × batch 8, each frame is seen ~21 times
+#   over 80k steps. Loss should plateau by ~50k. If still trending down at
+#   80k, train longer; if plateaued by 20k, you have model capacity to spare.
+# - 2-camera ACT is ~1.7× slower than 1-camera. Plan for 60 min on T4.

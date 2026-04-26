@@ -1,0 +1,29 @@
+# π₀ (Pi-Zero) — week 2 stub.
+#
+# This config exists so the architecture has a defined hyperparameter set
+# ready when you reach week 2. The actual training and inference code paths
+# for π₀ require:
+#   1. Confirming LeRobot 0.5.2 supports --policy.type=pi0 (it does as of 2026-04)
+#   2. Implementing inference/policies/pi0_adapter.py (currently a stub)
+#   3. Verifying the dataset has language instructions in the `task` field
+#      (which it does — your dataset uses "Pick up the object and drop it...")
+#
+# DO NOT use this config until week 2. The stubs will fail clearly.
+
+inherits: _base.yaml
+
+name: pi0
+
+policy:
+  type: pi0
+  repo_id: NotAyushXD/so101-pi0-pick-bowl-v0
+
+training:
+  # π₀ trains for fewer steps because it starts from a pretrained VLM backbone.
+  # Bumping above 50k for a single SO-101 task is likely overfitting.
+  steps: 30000
+  batch_size: 4   # π₀ uses ~6 GB more VRAM than ACT; T4 is tight at batch=4
+
+optimizer:
+  lr: 5.0e-5
+  lr_backbone: 5.0e-6   # 10× lower for the pretrained VLM backbone
