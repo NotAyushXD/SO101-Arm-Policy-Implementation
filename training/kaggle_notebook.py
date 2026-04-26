@@ -41,11 +41,12 @@ os.environ["WANDB_API_KEY"] = secrets.get_secret("WANDB_API_KEY")
 
 
 # %% --- CELL 3: clone the project ---
-# Replace YOUR_USERNAME/so101 with the repo where you've pushed this project.
-# This puts training/, configs/ etc. at /kaggle/working/so101.
+# Clones into /kaggle/working/so101 so the rest of the cells use a stable path
+# regardless of the repo name on GitHub.
 !rm -rf /kaggle/working/so101
-!git clone https://github.com/YOUR_USERNAME/so101.git /kaggle/working/so101
+!git clone https://github.com/NotAyushXD/SO101-Arm-Policy-Implementation.git /kaggle/working/so101
 %cd /kaggle/working/so101
+!ls configs training  # sanity check: the dispatcher and config should be visible
 
 
 # %% --- CELL 4: train ---
