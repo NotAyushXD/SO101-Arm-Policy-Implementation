@@ -1,0 +1,50 @@
+# Diffusion Policy (Chi et al., 2023) — stronger imitation baseline alongside ACT.
+# Hyperparameters match the published paper; LeRobot's defaults already match
+# most of these, but listing them explicitly for transparency and ablation.
+
+inherits: _base.yaml
+
+name: diffusion
+
+policy:
+  type: diffusion
+  repo_id: NotAyushXD/so101-diffusion-pick-bowl-v0
+
+  # Action chunking — DP predicts a horizon, executes a sub-window
+  horizon: 16             # total predicted action chunk
+  n_action_steps: 8       # actions actually executed per inference
+  n_obs_steps: 2          # observation history fed to the policy
+
+  # UNet architecture (paper defaults)
+  down_dims: [512, 1024, 2048]
+  kernel_size: 5
+  n_groups: 8
+  diffusion_step_embed_dim: 128
+  use_film_scale_modulation: true
+
+  # Vision encoder
+  vision_backbone: resnet18
+  use_group_norm: true
+  spatial_softmax_num_keypoints: 32
+
+  # Diffusion process
+  noise_scheduler_type: DDPM
+  num_train_timesteps: 100
+  beta_schedule: squaredcos_cap_v2
+  prediction_type: epsilon
+
+training:
+  steps: 80000            # match ACT for clean comparison
+  batch_size: 8           # match ACT; DP paper uses 256 but T4 can't fit that
+  save_freq: 5000
+
+optimizer:
+  lr: 1.0e-4              # 10× higher than ACT — DP needs this
+
+# --- Notes ---
+# - DP uses observation history (n_obs_steps=2), unlike ACT's single frame.
+#   LeRobot stacks frames automatically.
+# - DP uses an EMA model for inference; LeRobot handles this internally.
+# - Expected T4 wall-clock: ~60–80 min for 80k steps at batch 8. Slightly
+#   slower than ACT because of the UNet's depth.
+# - If loss looks unstable, drop lr to 5e-5 or batch up to 16 (T4 has headroom).
