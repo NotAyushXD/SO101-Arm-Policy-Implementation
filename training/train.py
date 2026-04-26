@@ -226,8 +226,12 @@ def main() -> None:
         out = Path("/kaggle/working/run")
     else:
         out = Path("./runs") / cfg["name"]
-    out.mkdir(parents=True, exist_ok=True)
-
+    if args.resume:
+      out.mkdir(parents=True, exist_ok=True)
+    elif out.exists():
+      import shutil
+      shutil.rmtree(out)
+      
     # Build + show the command
     cmd = build_command(cfg, args.platform, out, args.resume)
     print("=" * 70)
