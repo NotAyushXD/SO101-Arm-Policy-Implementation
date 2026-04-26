@@ -1,0 +1,17 @@
+# Server dependencies. Install on Colab/Kaggle/RunPod after the bootstrap
+# script clones this repo.
+
+# torch is pre-installed on all three platforms; do not pin or reinstall.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pillow>=10.0
+numpy>=1.26,<2.0
+huggingface_hub>=0.24
+wandb>=0.17
+pyngrok>=7.1                  # used by bootstraps to open the tunnel
+pandas>=2.2                   # for obs_logger flush
+pyarrow>=15.0                 # parquet writer
+
+# Pinned to match the training requirements file.
+lerobot@git+https://github.com/huggingface/lerobot.git@v0.2.0
